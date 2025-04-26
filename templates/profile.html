@@ -32,6 +32,16 @@
                 </div>
                 <!-- Editable Fields -->
                 <form id="profileForm" class="w-full max-w-md space-y-4">
+                    <!-- First Name -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">First Name</label>
+                        <input id="first_name" name="first_name" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="First Name">
+                    </div>
+                    <!-- Last Name -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Last Name</label>
+                        <input id="last_name" name="last_name" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Last Name">
+                    </div>
                     <!-- Industry -->
                     <div class="flex items-center">
                         <label class="w-32 text-black font-medium">Industry</label>
@@ -125,8 +135,7 @@
     <script>
         // Get access_token
         function getAccessToken() {
-            // Flask session cookie,  Need to render the access_token on the backend to the page
-            return "{{ session.get('access_token', '') }}";
+            return "{{ access_token }}";
         }
 
         // Skills 多选下拉逻辑
@@ -194,21 +203,28 @@
             });
         });
 
-        // 初始化填充
+        // --- GET: Fetch and populate profile on page load ---
         document.addEventListener('DOMContentLoaded', function () {
             const accessToken = getAccessToken();
             if (!accessToken) return;
 
-            fetch('/api/users/profile/', {
+            fetch('http://127.0.0.1:8000/api/users/profile/', {
                 headers: { 'Authorization': 'Bearer ' + accessToken }
             })
             .then(r => r.ok ? r.json() : Promise.reject())
             .then(data => {
                 document.getElementById('username').textContent = data.username || '';
+                document.getElementById('first_name').value = data.first_name || '';
+                document.getElementById('last_name').value = data.last_name || '';
                 if (data.profile) {
                     document.getElementById('industry').value = data.profile.industry || '';
                     document.getElementById('role').value = data.profile.role || '';
                     document.getElementById('location').value = data.profile.location || '';
+                    document.getElementById('goals').value = data.profile.goals || '';
+                    document.getElementById('website').value = data.profile.website || '';
+                    document.getElementById('github').value = (data.profile.social_links && data.profile.social_links.github) || '';
+                    document.getElementById('linkedin').value = (data.profile.social_links && data.profile.social_links.linkedin) || '';
+                    // Populate skills multi-select
                     if (data.profile.skills) {
                         let skillsArr = data.profile.skills.split(',').map(s => s.trim()).filter(Boolean);
                         selectedSkills = [];
@@ -222,25 +238,23 @@
                         });
                         renderSelectedSkills();
                     }
-                    document.getElementById('goals').value = data.profile.goals || '';
-                    document.getElementById('website').value = data.profile.website || '';
-                    document.getElementById('github').value = (data.profile.social_links && data.profile.social_links.github) || '';
-                    document.getElementById('linkedin').value = (data.profile.social_links && data.profile.social_links.linkedin) || '';
                 }
             });
         });
 
-        // 表单提交时同步 skills
+        // --- PUT: Update profile on form submit ---
         document.getElementById('profileForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const accessToken = getAccessToken();
             if (!accessToken) return;
 
             // Collect Form Data
+            const first_name = document.getElementById('first_name').value;
+            const last_name = document.getElementById('last_name').value;
             const industry = document.getElementById('industry').value;
             const role = document.getElementById('role').value;
             const location = document.getElementById('location').value;
-            const skills = Array.from(document.getElementById('skills').selectedOptions).map(o => o.value).join(', ');
+            const skills = selectedSkills.join(', ');
             const goals = document.getElementById('goals').value;
             const website = document.getElementById('website').value;
             const github = document.getElementById('github').value;
@@ -248,6 +262,8 @@
 
             // Build JSON
             const payload = {
+                first_name,
+                last_name,
                 profile: {
                     industry,
                     role,
@@ -262,7 +278,7 @@
                 }
             };
 
-            fetch('/api/users/profile/', {
+            fetch('http://127.0.0.1:8000/api/users/profile/', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
