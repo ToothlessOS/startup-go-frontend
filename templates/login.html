@@ -38,9 +38,18 @@
                         </div>
                     </div>
                     
-                    <button class="w-full bg-white text-black rounded-xl py-3 px-6 shadow-lg hover:shadow-xl transition-shadow">
-                        Continue with Email
-                    </button>
+                    <form method="POST" action="{{ url_for('login') }}" class="space-y-4">
+                        <input type="text" name="username" placeholder="Username" required
+                            class="w-full bg-white text-black rounded-xl py-3 px-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        
+                        <input type="password" name="password" placeholder="Password" required
+                            class="w-full bg-white text-black rounded-xl py-3 px-6 shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        
+                        <button type="submit" 
+                            class="w-full bg-white text-black rounded-xl py-3 px-6 shadow-lg hover:shadow-xl transition-shadow font-semibold">
+                            Continue with Email
+                        </button>
+                    </form>
 
                     <div class="text-center mt-4">
                         <p class="text-sm opacity-90">Don't have an account? 
