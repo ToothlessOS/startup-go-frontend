@@ -142,10 +142,23 @@ def profile():
     access_token = session.get('access_token', '')
     return render_template('profile.html', access_token=access_token)
 
+@app.route('/chat', methods=['GET'])
+def chat():
+    if not session.get('access_token'):
+        return redirect(url_for('login'))
+    return render_template('chat.html')
+
+@app.route('/michaelChen', methods=['GET'])
+def michaelChen():
+    if not session.get('access_token'):
+        return redirect(url_for('login'))
+    return render_template('michaelChen.html')
+
 @app.route('/project')
 def project():
     access_token = session.get('access_token', '')
     return render_template('project.html', access_token=access_token)
+
 
 # Run the application in debug mode
 if __name__ == '__main__':
