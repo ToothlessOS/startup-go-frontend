@@ -142,6 +142,11 @@ def profile():
     access_token = session.get('access_token', '')
     return render_template('profile.html', access_token=access_token)
 
+@app.route('/project')
+def project():
+    access_token = session.get('access_token', '')
+    return render_template('project.html', access_token=access_token)
+
 # Run the application in debug mode
 if __name__ == '__main__':
     app.run(debug=True)

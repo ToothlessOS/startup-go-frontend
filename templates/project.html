@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - comatch.ai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    <div class="device-frame bg-white">
+        <div class="h-full flex flex-col">
+            <!-- Header -->
+            <div class="px-6 py-5 flex justify-between items-center border-b">
+                <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left text-2xl text-black"></i></a>
+                <div class="flex items-center">
+                    <i class="fas fa-rocket text-2xl text-orange-500"></i>
+                    <span class="ml-2 font-bold">Projects</span>
+                </div>
+                <div></div>
+            </div>
+            <!-- Project Content -->
+            <div class="flex-1 flex flex-col items-center p-6 overflow-y-auto">
+                <form id="projectForm" class="w-full max-w-md space-y-4">
+                    <!-- Title -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Title</label>
+                        <input id="project_title" name="project_title" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Project Title" required>
+                    </div>
+                    <!-- Tagline -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Tagline</label>
+                        <input id="project_tagline" name="project_tagline" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Project Tagline">
+                    </div>
+                    <!-- Description -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Description</label>
+                        <textarea id="project_desc" name="project_desc" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Project Description"></textarea>
+                    </div>
+                    <!-- Industry -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Industry</label>
+                        <input id="project_industry" name="project_industry" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Industry">
+                    </div>
+                    <!-- Stage -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Stage</label>
+                        <select id="project_stage" name="project_stage" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none">
+                            <option value="">Select...</option>
+                            <option value="pre_idea">Pre-Idea Exploration</option>
+                            <option value="ideation">Ideation/Concept</option>
+                            <option value="prototype">Prototype Development</option>
+                            <option value="mvp">MVP</option>
+                            <option value="pre_seed">Pre-Seed/Early Traction</option>
+                            <option value="seed">Seed/Traction</option>
+                            <option value="scaling">Scaling/Growth</option>
+                            <option value="established">Established/Post Series-A</option>
+                            <option value="expansion">Expansion/Post Series-B</option>
+                            <option value="pivot">Pivot</option>
+                        </select>
+                    </div>
+                    <!-- Startup Type -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Startup Type</label>
+                        <select id="project_type" name="project_type" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none">
+                            <option value="">Select...</option>
+                            <option value="B2B">Business to Business</option>
+                            <option value="B2C">Business to Consumer</option>
+                            <option value="B2B2C">Business to Business to Consumer</option>
+                            <option value="C2C">Consumer to Consumer</option>
+                            <option value="B2G">Business to Government</option>
+                            <option value="G2C">Government to Consumer</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <!-- Business Model (multi-select) -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Business Model</label>
+                        <select id="project_biz" name="project_biz" multiple class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none">
+                            <option value="Freemium">Freemium</option>
+                            <option value="Subscription">Subscription</option>
+                            <option value="Marketplace">Marketplace</option>
+                            <option value="SaaS">Software as a Service</option>
+                            <option value="E-commerce">E-commerce</option>
+                            <option value="Enterprise">Enterprise</option>
+                            <option value="Advertising">Advertising</option>
+                            <option value="Transaction">Transaction-based</option>
+                            <option value="Licensing">Licensing</option>
+                            <option value="Direct Sales">Direct Sales</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <!-- Funding -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Funding</label>
+                        <select id="project_funding" name="project_funding" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none">
+                            <option value="">Select...</option>
+                            <option value="self_funded">Self-Funded</option>
+                            <option value="loan">Loan</option>
+                            <option value="investment">Invested</option>
+                            <option value="sponsored">Sponsored</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <!-- Team Size -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Team Size</label>
+                        <input id="project_team" name="project_team" type="number" min="1" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Team Size">
+                    </div>
+                    <!-- Website -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Website</label>
+                        <input id="project_website" name="project_website" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="https://">
+                    </div>
+                    <!-- Github -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Github</label>
+                        <input id="project_github" name="project_github" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="https://github.com/project">
+                    </div>
+                    <!-- Linkedin -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Linkedin</label>
+                        <input id="project_linkedin" name="project_linkedin" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="https://linkedin.com/company/project">
+                    </div>
+                    <!-- Save Button -->
+                    <div class="flex justify-center pt-4">
+                        <button type="submit" class="bg-orange-500 text-white px-8 py-2 rounded-lg font-semibold hover:bg-orange-600 transition">Save Project</button>
+                    </div>
+                </form>
+                <div id="projectMsg" class="mt-4 text-center text-sm"></div>
+                <!-- Project List -->
+                <div class="mt-8 w-full max-w-md">
+                    <h2 class="text-lg font-semibold mb-2">Your Projects</h2>
+                    <ul id="projectList" class="space-y-2">
+                        <!-- Project items will be rendered here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getAccessToken() {
+            return "{{ access_token }}";
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const accessToken = getAccessToken();
+            if (!accessToken) return;
+            fetch('http://127.0.0.1:8000/api/projects/', {
+                headers: { 'Authorization': 'Bearer ' + accessToken }
+            })
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(data => {
+                const list = document.getElementById('projectList');
+                list.innerHTML = '';
+                (data.results || []).forEach(project => {
+                    const li = document.createElement('li');
+                    li.className = 'bg-white rounded-lg p-4 shadow flex flex-col';
+                    li.innerHTML = `
+                        <div class="font-bold text-black text-lg mb-1">${project.title}</div>
+                        <div class="text-sm text-gray-600 mb-1">${project.tagline || ''}</div>
+                        <div class="text-xs text-gray-400 mb-2">${project.stage || ''} • ${project.industry || ''}</div>
+                        <div class="text-xs text-gray-500 mb-1"><b>Business Model:</b> ${(project.business_model || []).join(', ')}</div>
+                        <div class="text-xs text-gray-500 mb-1"><b>Team Size:</b> ${project.team_size || ''}</div>
+                        <div class="text-xs text-gray-500 mb-1"><b>Website:</b> <a href="${project.website || '#'}" class="text-orange-500 underline" target="_blank">${project.website || ''}</a></div>
+                    `;
+                    list.appendChild(li);
+                });
+            })
+            .catch(err => {
+                document.getElementById('projectList').innerHTML = '<li class="text-red-600">Failed to load projects.</li>';
+            });
+        });
+
+        // Handle project form submission
+        document.getElementById('projectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const accessToken = getAccessToken();
+            if (!accessToken) return;
+            // Collect form data
+            const business_model = Array.from(document.getElementById('project_biz').selectedOptions).map(o => o.value);
+            const payload = {
+                title: document.getElementById('project_title').value,
+                tagline: document.getElementById('project_tagline').value,
+                description: document.getElementById('project_desc').value,
+                industry: document.getElementById('project_industry').value,
+                stage: document.getElementById('project_stage').value,
+                startup_type: document.getElementById('project_type').value,
+                business_model,
+                funding: document.getElementById('project_funding').value,
+                team_size: parseInt(document.getElementById('project_team').value) || 1,
+                website: document.getElementById('project_website').value,
+                social_links: {
+                    github: document.getElementById('project_github').value,
+                    linkedin: document.getElementById('project_linkedin').value
+                }
+            };
+            fetch('http://127.0.0.1:8000/api/projects/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json().then(data => ({ok: r.ok, data})))
+            .then(res => {
+                if (res.ok) {
+                    document.getElementById('projectMsg').textContent = 'Project saved!';
+                    document.getElementById('projectMsg').className = 'mt-4 text-green-600 text-center text-sm';
+                    // Optionally, refresh the project list
+                    location.reload();
+                } else {
+                    document.getElementById('projectMsg').textContent = 'Save failed: ' + (res.data.detail || JSON.stringify(res.data));
+                    document.getElementById('projectMsg').className = 'mt-4 text-red-600 text-center text-sm';
+                }
+            })
+            .catch(() => {
+                document.getElementById('projectMsg').textContent = 'Network error';
+                document.getElementById('projectMsg').className = 'mt-4 text-red-600 text-center text-sm';
+            });
+        });
+    </script>
+</body>
+</html> 
