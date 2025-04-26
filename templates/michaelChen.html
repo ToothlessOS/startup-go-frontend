@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael Chen - Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    <div class="device-frame bg-white flex flex-col">
+        <!-- Header -->
+        <div class="px-6 py-5 flex justify-between items-center border-b">
+            <a href="{{ url_for('chat') }}"><i class="fas fa-arrow-left text-2xl text-black"></i></a>
+            <div class="text-xl font-bold text-black">Michael Chen</div>
+            <a href="{{ url_for('profile') }}"><i class="fas fa-ellipsis-h text-2xl text-black"></i></a>
+        </div>
+        <!-- Chat Messages -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 flex flex-col space-y-4 bg-gray-50">
+            <!-- 对方消息 -->
+            <div class="flex items-start">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full mr-2 object-cover" alt="Michael">
+                <div class="bg-gray-200 text-black px-4 py-2 rounded-2xl rounded-tl-none max-w-[70%]">
+                    Hi! 👋 Are you available for a quick call?
+                </div>
+            </div>
+            <!-- 自己消息 -->
+            <div class="flex items-end justify-end">
+                <div class="bg-orange-500 text-white px-4 py-2 rounded-2xl rounded-tr-none max-w-[70%]">
+                    Hi Michael! Sure, I’m free now.
+                </div>
+                <img src="https://www.gravatar.com/avatar/?d=mp&s=32" class="w-8 h-8 rounded-full ml-2 object-cover" alt="Me">
+            </div>
+            <!-- 对方消息 -->
+            <div class="flex items-start">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-8 h-8 rounded-full mr-2 object-cover" alt="Michael">
+                <div class="bg-gray-200 text-black px-4 py-2 rounded-2xl rounded-tl-none max-w-[70%]">
+                    Awesome! Let’s discuss the project details.
+                </div>
+            </div>
+            <!-- 自己消息 -->
+            <div class="flex items-end justify-end">
+                <div class="bg-orange-500 text-white px-4 py-2 rounded-2xl rounded-tr-none max-w-[70%]">
+                    Looking forward to it!
+                </div>
+                <img src="https://www.gravatar.com/avatar/?d=mp&s=32" class="w-8 h-8 rounded-full ml-2 object-cover" alt="Me">
+            </div>
+        </div>
+        <!-- Input Box -->
+        <form class="px-4 py-3 border-t bg-white flex items-center">
+            <input type="text" placeholder="Type a message..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 focus:outline-none" />
+            <button type="submit" class="ml-3 bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600 transition">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+</body>
+</html>

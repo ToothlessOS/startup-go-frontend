@@ -148,6 +148,12 @@ def chat():
         return redirect(url_for('login'))
     return render_template('chat.html')
 
+@app.route('/michaelChen', methods=['GET'])
+def michaelChen():
+    if not session.get('access_token'):
+        return redirect(url_for('login'))
+    return render_template('michaelChen.html')
+
 # Run the application in debug mode
 if __name__ == '__main__':
     app.run(debug=True)
