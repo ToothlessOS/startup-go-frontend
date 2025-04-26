@@ -24,5 +24,10 @@ def signup():
         return redirect(url_for('login'))  # 示例：注册后重定向到登录页面
     return render_template('signup.html')
 
+@app.route('/discover', methods=['GET', 'POST'])
+def discover():
+    return render_template('discover.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

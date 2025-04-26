@@ -1,0 +1,116 @@
+.device-frame {
+    width: 375px;
+    height: 812px;
+    border-radius: 40px;
+    border: 14px solid #1a1a1a;
+    overflow: hidden;
+    position: relative;
+}
+
+.gradient-bg {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ffa557 100%);
+}
+
+.card-swipe {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    transform-origin: center center;
+}
+
+.card-swipe:hover {
+    transform: scale(1.02);
+}
+
+.swipe-indicator {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card-swipe:hover .swipe-indicator {
+    opacity: 0.9;
+}
+
+.swipe-left {
+    background: linear-gradient(90deg, rgba(0,0,0,0.3) 0%, transparent 70%);
+}
+
+.swipe-right {
+    background: linear-gradient(-90deg, rgba(0,0,0,0.3) 0%, transparent 70%);
+}
+
+.card-swipe.expanding {
+    transform: scale(1.05);
+    opacity: 0;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 375px;
+    height: 812px;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 50;
+    border-radius: 2rem;
+}
+
+.modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    height: 100%;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.pull-indicator {
+    width: 40px;
+    height: 4px;
+    background-color: #CBD5E1;
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+.modal-scroll {
+    max-height: calc(100% - 20px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 50%;
+    color: black;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 60;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.close-button:hover {
+    transform: scale(1.05);
+}

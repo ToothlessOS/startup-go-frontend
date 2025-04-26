@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover - comatch.ai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    <div class="device-frame bg-gray-50">
+        <div class="h-full flex flex-col">
+            <!-- Header -->
+            <div class="px-6 py-5 flex justify-between items-center border-b">
+                <i class="fas fa-user-circle text-3xl text-black"></i>
+                <div class="flex items-center">
+                    <i class="fas fa-handshake text-3xl text-orange-500"></i>
+                </div>
+                <i class="fas fa-comments text-3xl text-black"></i>
+            </div>
+
+            <!-- Main Card -->
+            <div class="flex-1 flex items-center px-6">
+                <div id="mainCard" class="card-swipe bg-white rounded-[2rem] shadow-lg w-full relative overflow-hidden">
+                    <div class="h-[240px]">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a" alt="Profile" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <div class="absolute top-4 right-4">
+                        <button class="bg-white/90 rounded-full p-2 shadow-lg" onclick="alert('Report user?')">
+                            <i class="fas fa-ellipsis-h text-black"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-6 pb-12">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold text-black mb-2">Michael Chen</h2>
+                            <div class="flex items-center text-black opacity-70 mb-4">
+                                <i class="fas fa-map-marker-alt mr-2"></i>
+                                <span>San Francisco</span>
+                                <span class="mx-2">•</span>
+                                <span>2.5 miles away</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-5">
+                            <div class="bg-orange-50/50 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="font-medium text-black">AI-Powered Task Manager</span>
+                                    <span class="text-xs bg-orange-100 text-orange-800 px-2 py-0.5 rounded-full">Ideation</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-industry text-orange-600"></i>
+                                        <span class="text-sm text-black">Technology</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-users text-orange-600"></i>
+                                        <span class="text-sm text-black">Team of 3</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-chart-pie text-orange-600"></i>
+                                        <span class="text-sm text-black">20% Equity</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-money-bill-wave text-orange-600"></i>
+                                        <span class="text-sm text-black">Self-funded</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-black font-semibold mb-2">Seeking</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">Frontend Developer</span>
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">Backend Developer</span>
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">UI/UX Designer</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-black font-semibold mb-2">Tech Stack</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">React</span>
+                                    <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">Python</span>
+                                    <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">Django</span>
+                                    <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">AI/ML</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for swipe and modal -->
+    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+</body>
+</html>
