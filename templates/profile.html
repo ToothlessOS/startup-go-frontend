@@ -24,7 +24,8 @@
             <div class="flex-1 flex flex-col items-center p-6 overflow-y-auto">
                 <!-- Avatar -->
                 <div class="mb-4">
-                    <img id="avatar" src="https://www.gravatar.com/avatar/?d=mp&s=120" alt="Avatar" class="w-24 h-24 rounded-full border-4 border-orange-400 object-cover">
+                    <img id="avatar" src="https://www.gravatar.com/avatar/?d=mp&s=120" alt="Avatar" class="w-24 h-24 rounded-full border-4 border-orange-400 object-cover cursor-pointer">
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none">
                 </div>
                 <!-- Username -->
                 <div class="mb-6 text-center">
@@ -300,6 +301,44 @@
                 document.getElementById('profileMsg').textContent = "Network error";
                 document.getElementById('profileMsg').className = "mt-4 text-red-600 text-center text-sm";
             });
+        });
+
+        // 头像上传功能
+        const avatarImg = document.getElementById('avatar');
+        const avatarInput = document.getElementById('avatarInput');
+
+        avatarImg.addEventListener('click', function() {
+            avatarInput.click();
+        });
+
+        avatarInput.addEventListener('change', function() {
+            const file = avatarInput.files[0];
+            if (file) {
+                // 显示预览
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarImg.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // 上传到后端
+                const accessToken = getAccessToken();
+                const formData = new FormData();
+                formData.append('avatar', file);
+                fetch('/api/users/profile/avatar/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    },
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.avatar) {
+                        avatarImg.src = data.avatar;
+                    }
+                });
+            }
         });
     </script>
 </body>
