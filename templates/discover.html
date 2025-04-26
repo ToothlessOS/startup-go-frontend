@@ -6,7 +6,78 @@
     <title>Discover - comatch.ai</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <style>
+        .modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 375px;
+            height: 812px;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 50;
+            border-radius: 2rem;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            height: 100%;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            color: black;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 60;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .close-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .device-frame {
+            width: 375px;
+            height: 812px;
+            border-radius: 40px;
+            border: 14px solid #1a1a1a;
+            overflow: hidden;
+            position: relative;
+        }
+        .modal-scroll {
+            max-height: calc(100% - 20px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .modal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
     <div class="device-frame bg-gray-50">
@@ -95,7 +166,129 @@
         </div>
     </div>
 
+    <!-- Full Screen Modal -->
+    <div id="profileModal" class="modal">
+        <div class="close-button" onclick="closeModal()">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="modal-content bg-white">
+            <div class="modal-scroll h-full">
+                <div class="sticky top-0 bg-white pt-4 pb-2 px-6">
+                    <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto"></div>
+                </div>
+                <div class="px-6 pb-6">
+                    <div class="h-[240px] mb-6">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a" alt="Profile" class="w-full h-full object-cover rounded-xl">
+                    </div>
+
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-black mb-2">Michael Chen</h2>
+                        <div class="flex items-center text-black opacity-70 mb-4">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>San Francisco</span>
+                            <span class="mx-2">•</span>
+                            <span>2.5 miles away</span>
+                        </div>
+                        <p class="text-sm text-black opacity-70">
+                            Full-stack developer with 5+ years of experience in AI/ML and enterprise applications. Looking for passionate co-founders to revolutionize task management.
+                        </p >
+                    </div>
+
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-black mb-3">Project Overview</h3>
+                            <p class="text-sm text-black opacity-70 mb-4">
+                                An intelligent task management system that uses AI to prioritize and organize tasks, making team collaboration more efficient and productive.
+                            </p >
+                        </div>
+
+                        <div>
+                            <h3 class="text-black font-semibold mb-3">Roles Needed</h3>
+                            <div class="space-y-3">
+                                <div class="bg-orange-50 rounded-lg p-4">
+                                    <h4 class="font-medium text-black mb-2">Frontend Developer</h4>
+                                    <p class="text-sm text-black opacity-70">Expert in React and modern frontend frameworks, with a strong eye for UI/UX design.</p >
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-4">
+                                    <h4 class="font-medium text-black mb-2">Backend Developer</h4>
+                                    <p class="text-sm text-black opacity-70">Experienced in Python/Django and AI/ML integration. Knowledge of cloud services required.</p >
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-4">
+                                    <h4 class="font-medium text-black mb-2">UI/UX Designer</h4>
+                                    <p class="text-sm text-black opacity-70">Creative designer with experience in product design and user research.</p >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-black font-semibold mb-3">Tech Stack</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">React</span>
+                                <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">Python</span>
+                                <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">Django</span>
+                                <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">AI/ML</span>
+                                <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">AWS</span>
+                                <span class="px-3 py-1 bg-orange-50 text-orange-800 rounded-full text-sm">Docker</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Script for swipe and modal -->
-    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+    <script>
+        const modal = document.getElementById('profileModal');
+        const mainCard = document.getElementById('mainCard');
+
+        mainCard.addEventListener('click', () => {
+            const cardRect = mainCard.getBoundingClientRect();
+            const deviceFrame = mainCard.closest('.device-frame');
+            const deviceRect = deviceFrame.getBoundingClientRect();
+
+            mainCard.classList.add('expanding');
+            
+            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.width = `${cardRect.width}px`;
+            modal.style.height = `${cardRect.height}px`;
+            modal.style.top = `${cardRect.top - deviceRect.top + (cardRect.height/2)}px`;
+            modal.style.left = `${cardRect.left - deviceRect.left + (cardRect.width/2)}px`;
+
+            modal.offsetHeight;
+
+            requestAnimationFrame(() => {
+                modal.classList.add('active');
+                modal.style.transition = 'all 0.3s ease';
+                modal.style.top = '50%';
+                modal.style.left = '50%';
+                modal.style.width = '375px';
+                modal.style.height = '812px';
+            });
+        });
+
+        function closeModal() {
+            const cardRect = mainCard.getBoundingClientRect();
+            const deviceFrame = mainCard.closest('.device-frame');
+            const deviceRect = deviceFrame.getBoundingClientRect();
+
+            modal.style.width = `${cardRect.width}px`;
+            modal.style.height = `${cardRect.height}px`;
+            modal.style.top = `${cardRect.top - deviceRect.top + (cardRect.height/2)}px`;
+            modal.style.left = `${cardRect.left - deviceRect.left + (cardRect.width/2)}px`;
+
+            modal.classList.remove('active');
+
+            setTimeout(() => {
+                mainCard.classList.remove('expanding');
+                modal.style.transition = '';
+                modal.style.width = '';
+                modal.style.height = '';
+                modal.style.top = '';
+                modal.style.left = '';
+                modal.style.transform = 'translate(-50%, -50%)';
+            }, 300);
+        }
+    </script>
 </body>
 </html>
