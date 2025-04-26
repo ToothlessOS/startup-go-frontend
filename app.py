@@ -137,6 +137,13 @@ def discover():
         return redirect(url_for('login'))
     return render_template('discover.html')
 
+@app.route('/profile', methods=['GET'])
+def profile():
+    # 需要登录
+    if not session.get('access_token'):
+        return redirect(url_for('login'))
+    return render_template('profile.html')
+
 # Run the application in debug mode
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - comatch.ai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    <div class="device-frame bg-white">
+        <div class="h-full flex flex-col">
+            <!-- Header -->
+            <div class="px-6 py-5 flex justify-between items-center border-b">
+                <a href="{{ url_for('index') }}"><i class="fas fa-arrow-left text-2xl text-black"></i></a>
+                <div class="flex items-center">
+                    <i class="fas fa-user text-2xl text-orange-500"></i>
+                    <span class="ml-2 font-bold">Profile</span>
+                </div>
+                <div></div>
+            </div>
+            <!-- Profile Content -->
+            <div class="flex-1 flex flex-col items-center p-6 overflow-y-auto">
+                <!-- Avatar -->
+                <div class="mb-4">
+                    <img id="avatar" src="https://www.gravatar.com/avatar/?d=mp&s=120" alt="Avatar" class="w-24 h-24 rounded-full border-4 border-orange-400 object-cover">
+                </div>
+                <!-- Username -->
+                <div class="mb-6 text-center">
+                    <div id="username" class="text-xl font-bold text-black mb-1"></div>
+                </div>
+                <!-- Editable Fields -->
+                <form id="profileForm" class="w-full max-w-md space-y-4">
+                    <!-- Industry -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Industry</label>
+                        <select id="industry" name="industry" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none">
+                            <option value="">Select...</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Education">Education</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Retail">Retail</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <!-- Role -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Role</label>
+                        <select id="role" name="role" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none">
+                            <option value="">Select...</option>
+                            <option value="Software Engineer">Software Engineer</option>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Hardware Engineer">Hardware Engineer</option>
+                            <option value="Product Manager">Product Manager</option>
+                            <option value="Designer">Designer</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <!-- Location -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Location</label>
+                        <input id="location" name="location" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="City, Country">
+                    </div>
+                    <!-- Skills (custom multi-select) -->
+                    <div class="flex items-center relative">
+                        <label class="w-32 text-black font-medium">Skills</label>
+                        <div class="flex-1 relative">
+                            <div id="skills-select" class="bg-gray-100 rounded-lg px-4 py-2 flex flex-wrap items-center min-h-[44px] cursor-pointer focus:outline-none" tabindex="0">
+                                <!-- 选中项会插入在这里 -->
+                                <span id="skills-placeholder" class="text-gray-400 select-none">Select skills...</span>
+                                <span class="ml-auto">
+                                    <i class="fas fa-chevron-down text-gray-400"></i>
+                                </span>
+                            </div>
+                            <div id="skills-dropdown" class="absolute left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10 hidden max-h-40 overflow-y-auto">
+                                <!-- 选项列表 -->
+                                <div class="flex flex-wrap gap-2 p-2">
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="Python">Python</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="Django">Django</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="React">React</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="AWS">AWS</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="Java">Java</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="C">C</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="C++">C++</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="Go">Go</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="JavaScript">JavaScript</span>
+                                    <span class="skill-option bg-gray-200 px-3 py-1 rounded cursor-pointer" data-value="Other">Other</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="skills" name="skills">
+                        </div>
+                    </div>
+                    <!-- Goals -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Goals</label>
+                        <input id="goals" name="goals" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Your goals">
+                    </div>
+                    <!-- Website -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Website</label>
+                        <input id="website" name="website" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="https://">
+                    </div>
+                    <!-- Github -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Github</label>
+                        <input id="github" name="github" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="https://github.com/">
+                    </div>
+                    <!-- Linkedin -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Linkedin</label>
+                        <input id="linkedin" name="linkedin" type="text" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="https://linkedin.com/in/">
+                    </div>
+                    <!-- Save Button -->
+                    <div class="flex justify-center pt-4">
+                        <button type="submit" class="bg-orange-500 text-white px-8 py-2 rounded-lg font-semibold hover:bg-orange-600 transition">Save</button>
+                    </div>
+                </form>
+                <div id="profileMsg" class="mt-4 text-center text-sm"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Get access_token
+        function getAccessToken() {
+            // Flask session cookie,  Need to render the access_token on the backend to the page
+            return "{{ session.get('access_token', '') }}";
+        }
+
+        // Skills 多选下拉逻辑
+        const skillsSelect = document.getElementById('skills-select');
+        const skillsDropdown = document.getElementById('skills-dropdown');
+        const skillsInput = document.getElementById('skills');
+        const skillsPlaceholder = document.getElementById('skills-placeholder');
+        let selectedSkills = [];
+
+        function renderSelectedSkills() {
+            // 清空
+            skillsSelect.querySelectorAll('.skill-chip').forEach(e => e.remove());
+            // 插入已选
+            selectedSkills.forEach(skill => {
+                const chip = document.createElement('span');
+                chip.className = 'skill-chip bg-gray-300 px-2 py-1 rounded mr-2 mb-1 flex items-center cursor-pointer';
+                chip.textContent = skill;
+                chip.setAttribute('data-value', skill);
+                // 删除按钮
+                const close = document.createElement('span');
+                close.className = 'ml-1 text-gray-500 hover:text-red-500';
+                close.innerHTML = '&times;';
+                chip.appendChild(close);
+                chip.onclick = function(e) {
+                    e.stopPropagation();
+                    removeSkill(skill);
+                };
+                skillsSelect.insertBefore(chip, skillsPlaceholder);
+            });
+            // 占位符显示逻辑
+            skillsPlaceholder.style.display = selectedSkills.length ? 'none' : '';
+            // 更新隐藏 input
+            skillsInput.value = selectedSkills.join(', ');
+        }
+
+        function removeSkill(skill) {
+            selectedSkills = selectedSkills.filter(s => s !== skill);
+            // 重新显示到下拉
+            Array.from(skillsDropdown.querySelectorAll('.skill-option')).forEach(opt => {
+                if (opt.getAttribute('data-value') === skill) {
+                    opt.style.display = '';
+                }
+            });
+            renderSelectedSkills();
+        }
+
+        // 点击下拉框显示/隐藏
+        skillsSelect.addEventListener('click', function(e) {
+            skillsDropdown.classList.toggle('hidden');
+        });
+        // 失焦隐藏
+        skillsSelect.addEventListener('blur', function() {
+            setTimeout(() => skillsDropdown.classList.add('hidden'), 150);
+        });
+
+        // 选项点击
+        skillsDropdown.querySelectorAll('.skill-option').forEach(opt => {
+            opt.addEventListener('click', function(e) {
+                const val = this.getAttribute('data-value');
+                if (!selectedSkills.includes(val)) {
+                    selectedSkills.push(val);
+                    this.style.display = 'none';
+                    renderSelectedSkills();
+                }
+            });
+        });
+
+        // 初始化填充
+        document.addEventListener('DOMContentLoaded', function () {
+            const accessToken = getAccessToken();
+            if (!accessToken) return;
+
+            fetch('/api/users/profile/', {
+                headers: { 'Authorization': 'Bearer ' + accessToken }
+            })
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(data => {
+                document.getElementById('username').textContent = data.username || '';
+                if (data.profile) {
+                    document.getElementById('industry').value = data.profile.industry || '';
+                    document.getElementById('role').value = data.profile.role || '';
+                    document.getElementById('location').value = data.profile.location || '';
+                    if (data.profile.skills) {
+                        let skillsArr = data.profile.skills.split(',').map(s => s.trim()).filter(Boolean);
+                        selectedSkills = [];
+                        Array.from(skillsDropdown.querySelectorAll('.skill-option')).forEach(opt => {
+                            if (skillsArr.includes(opt.getAttribute('data-value'))) {
+                                opt.style.display = 'none';
+                                selectedSkills.push(opt.getAttribute('data-value'));
+                            } else {
+                                opt.style.display = '';
+                            }
+                        });
+                        renderSelectedSkills();
+                    }
+                    document.getElementById('goals').value = data.profile.goals || '';
+                    document.getElementById('website').value = data.profile.website || '';
+                    document.getElementById('github').value = (data.profile.social_links && data.profile.social_links.github) || '';
+                    document.getElementById('linkedin').value = (data.profile.social_links && data.profile.social_links.linkedin) || '';
+                }
+            });
+        });
+
+        // 表单提交时同步 skills
+        document.getElementById('profileForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const accessToken = getAccessToken();
+            if (!accessToken) return;
+
+            // Collect Form Data
+            const industry = document.getElementById('industry').value;
+            const role = document.getElementById('role').value;
+            const location = document.getElementById('location').value;
+            const skills = Array.from(document.getElementById('skills').selectedOptions).map(o => o.value).join(', ');
+            const goals = document.getElementById('goals').value;
+            const website = document.getElementById('website').value;
+            const github = document.getElementById('github').value;
+            const linkedin = document.getElementById('linkedin').value;
+
+            // Build JSON
+            const payload = {
+                profile: {
+                    industry,
+                    role,
+                    location,
+                    skills,
+                    goals,
+                    website,
+                    social_links: {
+                        github,
+                        linkedin
+                    }
+                }
+            };
+
+            fetch('/api/users/profile/', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + accessToken
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(r => r.json().then(data => ({ok: r.ok, data})))
+            .then(res => {
+                if (res.ok) {
+                    document.getElementById('profileMsg').textContent = "Profile saved!";
+                    document.getElementById('profileMsg').className = "mt-4 text-green-600 text-center text-sm";
+                } else {
+                    document.getElementById('profileMsg').textContent = "Save failed: " + (res.data.detail || JSON.stringify(res.data));
+                    document.getElementById('profileMsg').className = "mt-4 text-red-600 text-center text-sm";
+                }
+            })
+            .catch(() => {
+                document.getElementById('profileMsg').textContent = "Network error";
+                document.getElementById('profileMsg').className = "mt-4 text-red-600 text-center text-sm";
+            });
+        });
+    </script>
+</body>
+</html>
