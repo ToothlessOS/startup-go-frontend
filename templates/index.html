@@ -23,7 +23,7 @@
                             <a href="{{ url_for('discover') }}" class="text-gray-600 hover:text-orange-500">
                                 <i class="fas fa-compass text-xl"></i>
                             </a>
-                            <a href="{{ url_for('chat') }}" class="text-gray-600 hover:text-orange-500">
+                            <a href="{{ url_for('chat') }}" class="text-gray-600 hover:text-orange-500 chat-button">
                                 <i class="fas fa-comments text-xl"></i>
                             </a>
                             <a href="{{ url_for('profile') }}" class="text-gray-600 hover:text-orange-500">
@@ -59,7 +59,7 @@
                     </a>
 
                     <!-- Chat Card -->
-                    <a href="#" class="bg-white text-black rounded-xl p-4 flex items-center space-x-4 shadow-lg hover:shadow-xl transition-shadow">
+                    <a href="{{ url_for('chat') }}" class="bg-white text-black rounded-xl p-4 flex items-center space-x-4 shadow-lg hover:shadow-xl transition-shadow">
                         <div class="flex items-center justify-center h-12 w-12 rounded-full bg-orange-100">
                             <i class="fas fa-comments text-orange-500 text-xl"></i>
                         </div>

@@ -139,6 +139,8 @@ def discover():
 
 @app.route('/profile')
 def profile():
+    if not session.get('access_token'):
+        return redirect(url_for('login'))
     access_token = session.get('access_token', '')
     return render_template('profile.html', access_token=access_token)
 
@@ -156,6 +158,8 @@ def michaelChen():
 
 @app.route('/project')
 def project():
+    if not session.get('access_token'):
+        return redirect(url_for('login'))
     access_token = session.get('access_token', '')
     return render_template('project.html', access_token=access_token)
 
