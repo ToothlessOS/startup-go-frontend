@@ -71,13 +71,13 @@
                         <div class="relative flex-1">
                             <select id="project_type" name="project_type" class="w-full bg-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 border border-gray-300 appearance-none">
                                 <option value="">Select...</option>
-                                <option value="b2b">Business to Business</option>
-                                <option value="b2c">Business to Consumer</option>
-                                <option value="b2b2c">Business to Business to Consumer</option>
-                                <option value="c2c">Consumer to Consumer</option>
-                                <option value="b2g">Business to Government</option>
-                                <option value="g2c">Government to Consumer</option>
-                                <option value="other">Other</option>
+                                <option value="B2B">Business to Business</option>
+                                <option value="B2C">Business to Consumer</option>
+                                <option value="B2B2C">Business to Business to Consumer</option>
+                                <option value="C2C">Consumer to Consumer</option>
+                                <option value="B2G">Business to Government</option>
+                                <option value="G2C">Government to Consumer</option>
+                                <option value="Others">Others</option>
                             </select>
                             <span class="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-chevron-down"></i>
@@ -89,18 +89,17 @@
                         <label class="w-32 text-black font-medium">Business Model</label>
                         <div class="relative flex-1">
                             <select id="project_biz" name="project_biz" multiple class="w-full bg-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 border border-gray-300 appearance-none min-h-[44px]">
-                                <option value="">Select...</option>
-                                <option value="freemium">Freemium</option>
-                                <option value="subscription">Subscription</option>
-                                <option value="marketplace">Marketplace</option>
-                                <option value="saas">Software as a Service</option>
-                                <option value="ecommerce">E-commerce</option>
-                                <option value="enterprise">Enterprise</option>
-                                <option value="advertising">Advertising</option>
-                                <option value="transaction">Transaction-based</option>
-                                <option value="licensing">Licensing</option>
-                                <option value="direct_sales">Direct Sales</option>
-                                <option value="other">Other</option>
+                                <option value="Freemium">Freemium</option>
+                                <option value="Subscription">Subscription</option>
+                                <option value="Marketplace">Marketplace</option>
+                                <option value="SaaS">Software as a Service</option>
+                                <option value="E-commerce">E-commerce</option>
+                                <option value="Enterprise">Enterprise</option>
+                                <option value="Advertising">Advertising</option>
+                                <option value="Transaction">Transaction-based</option>
+                                <option value="Licensing">Licensing</option>
+                                <option value="Direct Sales">Direct Sales</option>
+                                <option value="Others">Others</option>
                             </select>
                             <span class="pointer-events-none absolute right-3 top-3 text-gray-400">
                                 <i class="fas fa-chevron-down"></i>
@@ -117,7 +116,7 @@
                                 <option value="loan">Loan</option>
                                 <option value="investment">Invested</option>
                                 <option value="sponsored">Sponsored</option>
-                                <option value="other">Other</option>
+                                <option value="Others">Others</option>
                             </select>
                             <span class="pointer-events-none absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <i class="fas fa-chevron-down"></i>
@@ -165,6 +164,11 @@
             return "{{ access_token }}";
         }
 
+        // Get current user ID from the token
+        function getCurrentUserId() {
+            return "{{ current_user_id }}";
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const accessToken = getAccessToken();
             if (!accessToken) return;
@@ -183,6 +187,18 @@
                 } else if (typeof data === 'object' && data !== null) {
                     projects = [data];
                 }
+                
+                // Filter projects to only show those created by current user
+                const currentUserId = getCurrentUserId();
+                projects = projects.filter(project => 
+                    project.created_by && project.created_by.id.toString() === currentUserId.toString()
+                );
+
+                if (projects.length === 0) {
+                    list.innerHTML = '<li class="text-gray-500 text-center py-4">No projects found. Create your first project!</li>';
+                    return;
+                }
+
                 projects.forEach(project => {
                     const li = document.createElement('li');
                     li.className = 'bg-white rounded-lg p-4 shadow flex flex-col relative';

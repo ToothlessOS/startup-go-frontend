@@ -135,7 +135,8 @@ def discover():
     # Check if user is authenticated
     if not session.get('access_token'):
         return redirect(url_for('login'))
-    return render_template('discover.html')
+    access_token = session.get('access_token', '')
+    return render_template('discover.html', access_token=access_token)
 
 @app.route('/profile')
 def profile():
@@ -160,8 +161,27 @@ def michaelChen():
 def project():
     if not session.get('access_token'):
         return redirect(url_for('login'))
+    
     access_token = session.get('access_token', '')
-    return render_template('project.html', access_token=access_token)
+    
+    # Get current user's profile to get their ID
+    try:
+        profile_response = requests.get(
+            f"{app.config['API_BASE_URL']}/api/users/profile/",
+            headers={'Authorization': f"Bearer {access_token}"}
+        )
+        
+        if profile_response.status_code == 200:
+            user_data = profile_response.json()
+            current_user_id = user_data.get('id')
+        else:
+            current_user_id = None
+    except:
+        current_user_id = None
+    
+    return render_template('project.html', 
+                         access_token=access_token,
+                         current_user_id=current_user_id)
 
 
 # Run the application in debug mode
