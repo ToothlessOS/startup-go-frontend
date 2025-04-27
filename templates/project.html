@@ -123,6 +123,11 @@
                             </span>
                         </div>
                     </div>
+                    <!-- Equity -->
+                    <div class="flex items-center">
+                        <label class="w-32 text-black font-medium">Equity</label>
+                        <input id="project_equity" name="project_equity" type="number" min="0" max="100" class="flex-1 bg-gray-100 rounded-lg px-4 py-2 focus:outline-none" placeholder="Equity %">
+                    </div>
                     <!-- Team Size -->
                     <div class="flex items-center">
                         <label class="w-32 text-black font-medium">Team Size</label>
@@ -172,76 +177,112 @@
         document.addEventListener('DOMContentLoaded', function () {
             const accessToken = getAccessToken();
             if (!accessToken) return;
-            fetch('http://127.0.0.1:8000/api/projects/', {
+
+            // First get the user's profile to get their project IDs
+            fetch('http://127.0.0.1:8000/api/users/profile/', {
                 headers: { 'Authorization': 'Bearer ' + accessToken }
             })
             .then(r => r.ok ? r.json() : Promise.reject())
-            .then(data => {
+            .then(userData => {
                 const list = document.getElementById('projectList');
-                list.innerHTML = '';
-                let projects = [];
-                if (Array.isArray(data)) {
-                    projects = data;
-                } else if (Array.isArray(data.results)) {
-                    projects = data.results;
-                } else if (typeof data === 'object' && data !== null) {
-                    projects = [data];
-                }
-                
-                // Filter projects to only show those created by current user
-                const currentUserId = getCurrentUserId();
-                projects = projects.filter(project => 
-                    project.created_by && project.created_by.id.toString() === currentUserId.toString()
-                );
+                list.innerHTML = '<li class="text-gray-500 text-center py-4">Loading projects...</li>';
 
-                if (projects.length === 0) {
+                if (!userData.profile || !userData.profile.projects || userData.profile.projects.length === 0) {
                     list.innerHTML = '<li class="text-gray-500 text-center py-4">No projects found. Create your first project!</li>';
                     return;
                 }
 
-                projects.forEach(project => {
-                    const li = document.createElement('li');
-                    li.className = 'bg-white rounded-lg p-4 shadow flex flex-col relative';
-                    li.innerHTML = `
-                        <div class="font-bold text-black text-lg mb-1">${project.title}</div>
-                        <div class="text-sm text-gray-600 mb-1">${project.tagline || ''}</div>
-                        <div class="text-xs text-gray-400 mb-2">${project.stage || ''} • ${project.industry || ''}</div>
-                        <div class="text-xs text-gray-500 mb-1"><b>Business Model:</b> ${(project.business_model || []).join(', ')}</div>
-                        <div class="text-xs text-gray-500 mb-1"><b>Team Size:</b> ${project.team_size || ''}</div>
-                        <div class="text-xs text-gray-500 mb-1"><b>Website:</b> <a href="${project.website || '#'}" class="text-orange-500 underline" target="_blank">${project.website || ''}</a></div>
-                        <button class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded delete-project-btn" data-id="${project.id}"><i class='fas fa-trash-alt'></i> Delete</button>
-                    `;
-                    list.appendChild(li);
-                });
-                // Add delete event listeners
-                document.querySelectorAll('.delete-project-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const projectId = this.getAttribute('data-id');
-                        const accessToken = getAccessToken();
-                        if (!accessToken) return;
-                        if (!confirm('Are you sure you want to delete this project?')) return;
-                        fetch(`http://127.0.0.1:8000/api/projects/${projectId}/`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken
-                            }
-                        })
-                        .then(r => {
-                            if (r.ok) {
-                                this.closest('li').remove();
-                            } else {
-                                alert('Failed to delete project.');
-                            }
-                        })
-                        .catch(() => {
-                            alert('Network error while deleting project.');
+                // Create an array of promises for each project request
+                const projectPromises = userData.profile.projects.map(projectId => 
+                    fetch(`http://127.0.0.1:8000/api/projects/${projectId}/`, {
+                        headers: { 'Authorization': 'Bearer ' + accessToken }
+                    })
+                    .then(r => {
+                        if (r.status === 404) {
+                            console.log(`Project ${projectId} not found`);
+                            return null;
+                        }
+                        if (!r.ok) {
+                            console.log(`Failed to fetch project ${projectId}`);
+                            return null;
+                        }
+                        return r.json();
+                    })
+                    .catch(err => {
+                        console.error(`Error fetching project ${projectId}:`, err);
+                        return null;
+                    })
+                );
+
+                // Wait for all project requests to complete
+                Promise.all(projectPromises)
+                    .then(projects => {
+                        // Filter out null values (404s and other errors)
+                        const validProjects = projects.filter(project => project !== null);
+                        console.log('Valid projects:', validProjects);
+                        
+                        if (validProjects.length === 0) {
+                            list.innerHTML = '<li class="text-gray-500 text-center py-4">No projects found. Create your first project!</li>';
+                            return;
+                        }
+
+                        list.innerHTML = ''; // Clear loading message
+                        
+                        validProjects.forEach(project => {
+                            console.log('Rendering project:', project);
+                            const li = document.createElement('li');
+                            li.className = 'bg-white rounded-lg p-4 shadow flex flex-col relative';
+                            li.innerHTML = `
+                                <div class="font-bold text-black text-lg mb-1">${project.title || 'Untitled Project'}</div>
+                                <div class="text-sm text-gray-600 mb-1">${project.tagline || ''}</div>
+                                <div class="text-xs text-gray-400 mb-2">${project.stage || ''} • ${project.industry || ''}</div>
+                                <div class="text-xs text-gray-500 mb-1"><b>Business Model:</b> ${(project.business_model || []).join(', ') || 'Not specified'}</div>
+                                <div class="text-xs text-gray-500 mb-1"><b>Team Size:</b> ${project.team_size || 'Not specified'}</div>
+                                <div class="text-xs text-gray-500 mb-1"><b>Equity:</b> ${project.equity || '0'}%</div>
+                                <div class="text-xs text-gray-500 mb-1"><b>Website:</b> <a href="${project.website || '#'}" class="text-orange-500 underline" target="_blank">${project.website || 'Not specified'}</a></div>
+                                <button class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded delete-project-btn" data-id="${project.id}"><i class='fas fa-trash-alt'></i> Delete</button>
+                            `;
+                            list.appendChild(li);
                         });
+
+                        // Add delete event listeners
+                        document.querySelectorAll('.delete-project-btn').forEach(btn => {
+                            btn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                const projectId = this.getAttribute('data-id');
+                                if (!confirm('Are you sure you want to delete this project?')) return;
+                                
+                                fetch(`http://127.0.0.1:8000/api/projects/${projectId}/`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Authorization': 'Bearer ' + accessToken
+                                    }
+                                })
+                                .then(r => {
+                                    if (r.ok || r.status === 404) {
+                                        this.closest('li').remove();
+                                        // If no projects left, show the "no projects" message
+                                        if (document.querySelectorAll('#projectList li').length === 0) {
+                                            document.getElementById('projectList').innerHTML = '<li class="text-gray-500 text-center py-4">No projects found. Create your first project!</li>';
+                                        }
+                                    } else {
+                                        alert('Failed to delete project.');
+                                    }
+                                })
+                                .catch(() => {
+                                    alert('Network error while deleting project.');
+                                });
+                            });
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Error loading projects:', err);
+                        list.innerHTML = '<li class="text-red-600">Failed to load projects.</li>';
                     });
-                });
             })
             .catch(err => {
-                document.getElementById('projectList').innerHTML = '<li class="text-red-600">Failed to load projects.</li>';
+                console.error('Error loading user profile:', err);
+                document.getElementById('projectList').innerHTML = '<li class="text-red-600">Failed to load user profile.</li>';
             });
         });
 
@@ -261,6 +302,7 @@
                 startup_type: document.getElementById('project_type').value,
                 business_model,
                 funding: document.getElementById('project_funding').value,
+                equity: parseInt(document.getElementById('project_equity').value) || 0,
                 team_size: parseInt(document.getElementById('project_team').value) || 1,
                 website: document.getElementById('project_website').value,
                 social_links: {
