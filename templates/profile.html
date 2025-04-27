@@ -306,6 +306,7 @@
         // 头像上传功能
         const avatarImg = document.getElementById('avatar');
         const avatarInput = document.getElementById('avatarInput');
+        const profileMsg = document.getElementById('profileMsg');
 
         avatarImg.addEventListener('click', function() {
             avatarInput.click();
@@ -314,29 +315,66 @@
         avatarInput.addEventListener('change', function() {
             const file = avatarInput.files[0];
             if (file) {
-                // 显示预览
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    profileMsg.textContent = "Please select an image file";
+                    profileMsg.className = "mt-4 text-red-600 text-center text-sm";
+                    return;
+                }
+
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    profileMsg.textContent = "Image size should be less than 5MB";
+                    profileMsg.className = "mt-4 text-red-600 text-center text-sm";
+                    return;
+                }
+
+                // Show loading state
+                profileMsg.textContent = "Uploading avatar...";
+                profileMsg.className = "mt-4 text-gray-600 text-center text-sm";
+
+                // Show preview
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     avatarImg.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
 
-                // 上传到后端
+                // Upload to backend
                 const accessToken = getAccessToken();
+                if (!accessToken) {
+                    profileMsg.textContent = "Authentication required";
+                    profileMsg.className = "mt-4 text-red-600 text-center text-sm";
+                    return;
+                }
+
                 const formData = new FormData();
                 formData.append('avatar', file);
-                fetch('/api/users/profile/avatar/', {
+
+                fetch('http://127.0.0.1:8000/api/users/profile/avatar/', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + accessToken
                     },
                     body: formData
                 })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.avatar) {
-                        avatarImg.src = data.avatar;
+                .then(r => r.json().then(data => ({ok: r.ok, data})))
+                .then(res => {
+                    if (res.ok) {
+                        profileMsg.textContent = "Avatar updated successfully!";
+                        profileMsg.className = "mt-4 text-green-600 text-center text-sm";
+                        if (res.data.avatar) {
+                            avatarImg.src = res.data.avatar;
+                        }
+                    } else {
+                        profileMsg.textContent = "Failed to update avatar: " + (res.data.detail || JSON.stringify(res.data));
+                        profileMsg.className = "mt-4 text-red-600 text-center text-sm";
                     }
+                })
+                .catch(error => {
+                    profileMsg.textContent = "Network error while uploading avatar";
+                    profileMsg.className = "mt-4 text-red-600 text-center text-sm";
+                    console.error('Avatar upload error:', error);
                 });
             }
         });
